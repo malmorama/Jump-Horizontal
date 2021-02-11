@@ -67,5 +67,10 @@ public class ObjectPooler : MonoBehaviour
 
     }
 
+    public void AddToPool(string tag, GameObject objectToAdd)
+    {
+        poolDictionary[tag].Enqueue(objectToAdd);   
+    }
+
 
 }

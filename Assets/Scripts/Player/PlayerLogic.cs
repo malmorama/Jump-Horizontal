@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
+[System.Serializable] public class _UnityEventGameObject : UnityEvent<GameObject> { }
+
 public class PlayerLogic : MonoBehaviour
 {
     public float jumpForce;
@@ -22,7 +24,8 @@ public class PlayerLogic : MonoBehaviour
     private bool collideWithPlatform = false;
     private float oldPlatformSpeed;
     private float oldBackgroundSpeed;
-
+    public _UnityEventGameObject rightSideUpEvent;
+     
     
 
     //float tempScore;
@@ -88,13 +91,16 @@ public class PlayerLogic : MonoBehaviour
             //coinCollectSound.Play();
         }
 
-        //If player hit telport platform
-        //if (collision.gameObject.name.StartsWith("Teleportstation"))
-        //{
-        //    StartCoroutine(TelePortPlatformCoroutine());
-        //}
+        //If player hit rightsideupsign
+        if (collision.gameObject.name.StartsWith("RightSignUp"))
+        {
+            rightSideUpEvent.Invoke(gameObject);
+            collision.gameObject.SetActive(false);
+        }
 
     }
+
+    
 
 
     private void OnCollisionEnter2D(Collision2D collision)
