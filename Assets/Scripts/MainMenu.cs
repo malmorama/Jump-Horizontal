@@ -7,8 +7,9 @@ public class MainMenu : MonoBehaviour
 {
      
    //private bool menuPressedPlay = false;
-   FadeScreen fadeScreen;
-   //public double transitionTime = 0.5f;
+    FadeScreen fadeScreen;
+    //public double transitionTime = 0.5f;
+    public GameVariables gameVariables;
 
 
     void Awake()
@@ -30,28 +31,30 @@ public class MainMenu : MonoBehaviour
     public void PlayGame()
     {
         StartCoroutine(FadeBlackPlayScene());
-        //SceneManager.LoadScene("Gameplay");
-       
-       // menuPressedPlay = true;
-         
+        
     }
 
     public void Instructions()
     {
         StartCoroutine(FadeBlackInstructions());
-        //SceneManager.LoadScene("Gameplay");
-
-        // menuPressedPlay = true;
-
+       
     }
 
     public void Menu()
     {
         StartCoroutine(FadeBlackMenu());
-        //SceneManager.LoadScene("Gameplay");
+  
+    }
 
-        // menuPressedPlay = true;
+    public void PlayFromStatsScene()
+    {
+        StartCoroutine(FadeBlackPlayFromStatsScene());
 
+    }
+
+    public void NextLevel()
+    {
+        StartCoroutine(FadeBlackNextLevel());
     }
 
 
@@ -79,6 +82,39 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(fadeScreen.FadeToBlackScreen());
         yield return new WaitForSeconds(0.5f);
         SceneManager.LoadScene("Menu");
+    }
+
+    private IEnumerator FadeBlackPlayFromStatsScene()
+    {
+        if(gameVariables.life > 0)
+        {
+            gameVariables.difficulty++;
+            StartCoroutine(fadeScreen.FadeToBlackScreen());
+            yield return new WaitForSeconds(0.5f);
+            SceneManager.LoadScene("Gameplay");
+        }
+        else
+        {
+            gameVariables.score = 0f;
+            gameVariables.difficulty = 0;
+            gameVariables.life = 1;
+            gameVariables.CurrentScoreToDifficulity = 0;
+            StartCoroutine(fadeScreen.FadeToBlackScreen());
+            yield return new WaitForSeconds(0.5f);
+            SceneManager.LoadScene("Gameplay");
+        }
+
+ 
+    }
+
+
+    //not used
+    private IEnumerator FadeBlackNextLevel()
+    {
+        gameVariables.difficulty++;
+        StartCoroutine(fadeScreen.FadeToBlackScreen());
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("Gameplay");
     }
 
 

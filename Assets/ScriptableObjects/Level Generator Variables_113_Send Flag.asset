@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9978cd9a8914c42a1be65bda4bc91c9e, type: 3}
+  m_Name: Level Generator Variables_113_Send Flag
+  m_EditorClassIdentifier: 
+  Level: 1
+  levelIDHeader: 113
+  randomNumberGeneratedFrom: 1
+  randomNumberGeneratedTo: 1
+  levelContent:
+  - methodName: RespawnObjectWithObjectOnTop
+    methodActive: 1
+    randomNumberFrom: 1
+    randomNumberTo: 1
+    objRespawn: Platform
+    objOnTop: Flag
+    objOnTopHeight: 2

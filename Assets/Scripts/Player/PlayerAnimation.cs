@@ -16,13 +16,23 @@ public class PlayerAnimation : MonoBehaviour
     {
         rb2d = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
+        StartCoroutine(PlayerAnimationLoop());
          
     }
 
     // Update is called once per frame
     void Update()
     {
-        PlayPlayerAnimation();
+        //PlayPlayerAnimation();
+    }
+
+    private IEnumerator PlayerAnimationLoop()
+    {
+        while (true)
+        {
+            PlayPlayerAnimation();
+            yield return new WaitForSeconds(0.01f); ;
+        }
     }
 
 

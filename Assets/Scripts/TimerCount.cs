@@ -13,6 +13,10 @@ public class TimerCount : MonoBehaviour
     private static int oldMinuteCount;
     private static int oldHourCount;
 
+    private void Awake()
+    {
+        //DontDestroyOnLoad(gameObject);
+    }
 
     // Start is called before the first frame update
     void Start()

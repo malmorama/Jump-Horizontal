@@ -4,12 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class GameManager : MonoBehaviour
+public class GameScreenText : MonoBehaviour
 {
     public GameVariables gameVariables;
-    //public Text gameInstructions;
+    public Text printDifficulty;
     private int oldDifficulty;
     public TextMeshProUGUI gameInstructions;
+    bool runningGameInstructionsCoroutine;
+    //private int oldDifficulty;
+
 
     // Start is called before the first frame update
     void Start()
@@ -18,39 +21,75 @@ public class GameManager : MonoBehaviour
         //gameVariables.score = 0f;
         gameInstructions.gameObject.SetActive(false);
         oldDifficulty = gameVariables.difficulty;
-        //StartCoroutine(GameInstructions("TAP LEFT OR RIGHT SIDE OF THE SCREEN"));
+        StartCoroutine(PrintScreenText());
+        runningGameInstructionsCoroutine = false;
         //StartCoroutine(GameLogic());
+
+
     }
 
     // Update is called once per frame
+    
     void Update()
     {
-        gameVariables.difficulty = SetDifficulity(gameVariables.score);
+       
 
     }
 
-    //function to set difficulity based on score
-    private int SetDifficulity(float score)
+    public void PrintStartNewLevelText(int levelId, Collider2D collision)
     {
-        int difficulty = Mathf.RoundToInt(score / 200);
-        return difficulty;
+
+        if (levelId == 110 && runningGameInstructionsCoroutine == false)
+        {
+            StartCoroutine(GameInstructions("LEVEL 1"));
+        }
+
+        if (levelId == 121 && runningGameInstructionsCoroutine == false)
+        {
+            StartCoroutine(GameInstructions("LEVEL 2"));
+        }
+
+        if (levelId == 111 || levelId == 122)
+        {
+            runningGameInstructionsCoroutine = false;
+        }
+
     }
 
-
+    private IEnumerator PrintScreenText()
+    {
+        while (true)
+        {
+            printDifficulty.text = Mathf.RoundToInt(gameVariables.difficulty).ToString();
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
 
     private IEnumerator GameInstructions (string text)
     {
+        runningGameInstructionsCoroutine = true;
         gameInstructions.text = text;
         Color color = gameInstructions.color;
         color.a = 1;
         gameInstructions.color = color;
-        //yield return new WaitForSeconds(0.5f);
+        gameInstructions.gameObject.transform.localScale = new Vector2(0, 0);
         gameInstructions.gameObject.SetActive(true);
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(1);
+        float i = 0;
+        while (gameInstructions.gameObject.transform.localScale.x < 1.5f)
+        {
+            i += 0.05f;
+            gameInstructions.gameObject.transform.localScale = new Vector2(gameInstructions.gameObject.transform.localScale.x + i,
+                gameInstructions.gameObject.transform.localScale.y + i);
+            yield return new WaitForSeconds(0.05f);
+        }
+        //yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(4);
         gameInstructions.CrossFadeAlpha(0, 1, false);
         yield return new WaitForSeconds(2);
         gameInstructions.gameObject.SetActive(false);
         
+
     }
 
     private IEnumerator GameLogic()

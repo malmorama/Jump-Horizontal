@@ -10,6 +10,7 @@ public class RespawnColliderScript : MonoBehaviour
    [System.Serializable]
     public class Level
     {
+        //public int level;
         public int levelId;
         public int difficultyFrom;
         public int difficultyTo;
@@ -36,36 +37,14 @@ public class RespawnColliderScript : MonoBehaviour
         objectsToCheck.Add("Heart");
         objectsToCheck.Add("Teleportstation");
         objectsToCheck.Add("RightSignUp");
-        respawnOtherObject.Add("Teleportplatform");
+        //send std platform if collider hits these
+        respawnOtherObject.Add("TeleportPlatform");
         respawnOtherObject.Add("Spring");
         respawnOtherObject.Add("BrownPlatform");
     }
 
 
-    private void LevelCheck(int difficulty, Collider2D collision)
-    {
-        foreach (Level level in levels)
-        {
-            if (difficulty >= level.difficultyFrom && difficulty <= level.difficultyTo)
-            {
-                //print(level.levelId);
-                //send levelid, collider to levelgeneratorscript
-                levelGeneratorEvent.Invoke(level.levelId, collision);
-
-            }
-            else
-            {
-                print("no diffculty or level defined");
-            }
-        }
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-         
-    }
+   
 
     //detect collision on RespawnCollider that is a object in the hierarchy
     private void OnTriggerEnter2D(Collider2D collision)
@@ -90,294 +69,26 @@ public class RespawnColliderScript : MonoBehaviour
             }
         }
 
-        //make it inactive and send the standard platform, pool some platforms
-        if (difficulty == 0)
-        {
-            
-            if (collision.gameObject.name == "Platform (1)" || collision.gameObject.name == "Platform (2)"
-                || collision.gameObject.name == "Platform (3)" || collision.gameObject.name == "Platform (4)"
-                || collision.gameObject.name == "Platform (5)" || collision.gameObject.name == "Platform (6)"
-                || collision.gameObject.name == "Platform (7)" || collision.gameObject.name == "Platform (8)")
-            {
-                collision.gameObject.name = "Platform(Clone)";
-                ObjectPooler.Instance.AddToPool("Platform", collision.gameObject);
-            }
-            collision.gameObject.SetActive(false);
-            RespawnPlatform();
-        }
 
         //checks the difficulty vs what is preset in the list in the editor, send the levelid and collision to levelgenerator script that
         //take the info to generate level
         LevelCheck(difficulty, collision);
 
-
-        //send the standard platform and send gold based on random number. Send some spring platforms
-        if (difficulty >= 1 && difficulty <= 3)
-        {
-            if (collision.gameObject.name.StartsWith("Platform"))
-            {
-                //objects to respawn
-                randomNumber = Random.Range(1, 40);
-                if (randomNumber >= 1 && randomNumber <= 15)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "Gold");
-                }
-                else if (randomNumber == 16 || randomNumber == 17)
-                {
-                    RespawnAnotherObject(collision, "Platform", "Spring");
-                }
-                else if (randomNumber == 21 && gameVariables.life == 1)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "Heart");
-                }
-                else if (randomNumber == 22)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "RightSignUp");
-                }
-                //else if (randomNumber == 12 || randomNumber == 13)
-                //{
-                //    RespawnAnotherObject(collision, "Platform", "BrownPlatform");
-                //}
-                else
-                {
-                    MoveObject(collision);
-                }
-            }
-
-            //if respawn collider hit spring send std platform
-            //if (collision.gameObject.name.StartsWith("Spring"))
-            //{
-            //    RespawnAnotherObject(collision, "Spring", "Platform");
-            //}
-
-        }
-
-        //send the standard platform and send gold based on random number. Send some spring platforms
-        if (difficulty >= 4 && difficulty <= 8)
-        {
-            
-
-            if (collision.gameObject.name.StartsWith("Platform"))
-            {
-                //objects to respawn
-                randomNumber = Random.Range(1, 40);
-                if (randomNumber >= 1 && randomNumber <= 15)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "Gold");
-                }
-                else if (randomNumber == 16 || randomNumber == 17)
-                {
-                    RespawnAnotherObject(collision, "Platform", "Spring");
-                }
-                else if (randomNumber >= 23 || randomNumber <= 40)
-                {
-                    RespawnAnotherObject(collision, "Platform", "BrownPlatform");
-                }
-                else if (randomNumber == 21 && gameVariables.life == 1)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "Heart");
-                }
-                else if (randomNumber == 22)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "RightSignUp");
-                }
-                else
-                {
-                    MoveObject(collision);
-                }
-            }
-
-            //if respawn collider hit spring send std platform
-            //if (collision.gameObject.name.StartsWith("Spring"))
-            //{
-            //    RespawnAnotherObject(collision, "Spring", "Platform");
-            //}
-
-            //if respawn collider hit spring send std platform
-            //if (collision.gameObject.name.StartsWith("BrownPlatform"))
-            //{
-            //    RespawnAnotherObject(collision, "BrownPlatform", "Platform");
-            //}
-
-        }
-
-        //send the standard platform and send gold based on random number. Send some spring platforms
-        if (difficulty >= 9 && difficulty <= 20)
-        {
-            
-
-            if (collision.gameObject.name.StartsWith("Platform"))
-            {
-                //objects to respawn
-                randomNumber = Random.Range(1, 40);
-                if (randomNumber >= 1 && randomNumber <= 15)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "Gold");
-                }
-                else if (randomNumber == 16 || randomNumber == 18)
-                {
-                    RespawnAnotherObject(collision, "Platform", "Spring");
-                }
-                else if (randomNumber == 19 || randomNumber == 21)
-                {
-                    RespawnAnotherObject(collision, "Platform", "BrownPlatform");
-
-                }
-                else if (randomNumber == 22 && gameVariables.life == 1)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "Heart");
-                }
-                else if (randomNumber == 23 || randomNumber == 24)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "Pink");
-                }
-                else if (randomNumber == 25)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "RightSignUp");
-                }
-                else
-                {
-                    MoveObject(collision);
-                }
-            }
-
-            //if respawn collider hit spring send std platform
-            //if (collision.gameObject.name.StartsWith("Spring"))
-            //{
-            //    RespawnAnotherObject(collision, "Spring", "Platform");
-            //}
-
-            //if respawn collider hit spring send std platform
-            //if (collision.gameObject.name.StartsWith("BrownPlatform"))
-            //{
-            //    RespawnAnotherObject(collision, "BrownPlatform", "Platform");
-            //}
-
-        }
-
-        //same as difficulity 4 but add brown platform and pink collection and instantate heart
-        if (difficulty >= 21)
-        {
-            
-
-            if (collision.gameObject.name.StartsWith("Platform"))
-            {
-                //objects to respawn
-                randomNumber = Random.Range(1, 40);
-                if (randomNumber >= 1 && randomNumber <= 15)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "Gold");
-                }
-                else if (randomNumber >= 16 && randomNumber <= 18)
-                {
-                    RespawnAnotherObject(collision, "Platform", "Spring");
-                }
-                else if (randomNumber == 19 || randomNumber == 23 && gameVariables.sendTelePortOnlyOnce == false)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Teleportplatform", "Teleportstation");
-                }
-                else if (randomNumber == 20)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "Pink");
-                }
-                else if (randomNumber == 21 && gameVariables.life == 1)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "Heart");
-                }
-                else if (randomNumber == 22)
-                {
-                    RespawnAnotherObject(collision, "Platform", "BrownPlatform");
-                }
-                else if (randomNumber == 23)
-                {
-                    RespawnObjectWithObjectOnTop(collision, "Platform", "Platform", "RightSignUp");
-                }
-
-                else
-                {
-                    MoveObject(collision);
-                }
-            }
-
-
-            //Respawn standardplatform after collision with these
-            //if (collision.gameObject.name.StartsWith("BrownPlatform"))
-            //{
-            //    RespawnAnotherObject(collision, "BrownPlatform", "Platform");
-            //}
-
-            //if (collision.gameObject.name.StartsWith("Spring"))
-            //{
-            //    RespawnAnotherObject(collision, "Spring", "Platform");
-            //}
-
-
-            //if (collision.gameObject.name.StartsWith("Teleportplatform"))
-            //{
-            //    RespawnAnotherObject(collision, "Teleportplatform", "Platform");
-            //}
-
-
-        }
-
-
     }
 
-    private void BaseRespawnMetod(Collider2D collision)
+    private void LevelCheck(int difficulty, Collider2D collision)
     {
-        if (collision.gameObject.name.StartsWith("Platform"))
+        foreach (Level level in levels)
         {
-            RespawnRandomObjects(collision.gameObject);
-        }
-        else if (collision.gameObject.name.StartsWith("Gold"))
-        {
-            collision.gameObject.SetActive(false);
-            //Destroy(collision.gameObject);
-        }
-        else if (collision.gameObject.name.StartsWith("Spring"))
-        {
-            collision.gameObject.SetActive(false);
-            RespawnPlatform();
+            if (difficulty >= level.difficultyFrom && difficulty <= level.difficultyTo)
+            {
+                //print(level.levelId);
+                //send levelid, collider to levelgeneratorscript
+                levelGeneratorEvent.Invoke(level.levelId, collision);
+            }
         }
     }
 
-    
-
-    //sends standard platform, spring and coin based on random number
-    private void RespawnRandomObjects(GameObject gameObject)
-    {
-        int randomNumber;
-        randomNumber = Random.Range(1, 15);
-        if (randomNumber == 1)
-        {
-            //Send the kill platform (spring prefab)
-            //Destroy(gameObject);
-            gameObject.SetActive(false);
-            Vector2 position = new Vector2(Camera.main.transform.position.x + (42 * Random.Range(1f, 1.1f)), Random.Range(-15f, 10f));
-            //newPlat = Instantiate(springPrefab, position, Quaternion.identity);
-            ObjectPooler.Instance.SpawnFromPool("Spring", position, Quaternion.identity);
-        }
-        else if (randomNumber == 2 || randomNumber == 3 || randomNumber == 4 || randomNumber == 5)
-        {
-            //send standard platform and instatiate coin on top of new object
-            //std platform
-            //Destroy(gameObject);
-            gameObject.SetActive(false);
-            Vector2 position = new Vector2(Camera.main.transform.position.x + (42 * Random.Range(1f, 1.1f)), Random.Range(-15f, 10f));
-            //newPlat = Instantiate(platformPrefab, position, Quaternion.identity);
-            ObjectPooler.Instance.SpawnFromPool("Platform", position, Quaternion.identity);
-
-            //instantiate new coin
-            Vector2 position2 = new Vector2(position.x, position.y + 3);
-            //newCoin = Instantiate(coinPrefab, position2, Quaternion.identity);
-            ObjectPooler.Instance.SpawnFromPool("Gold", position2, Quaternion.identity);
-        } else
-        {
-           //move the standard platform
-           gameObject.transform.position = new Vector2(Camera.main.transform.position.x + (42 * Random.Range(1f, 1.1f)), Random.Range(-15f, 10f));
-        }
-        //}
-    }
 
     //sends only the std platform
     private void RespawnPlatform()

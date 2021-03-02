@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 87049cae8030e40719b2e6510592abcd, type: 3}
-  m_Name: New Game Variables
+  m_Name: GameVariables
   m_EditorClassIdentifier: 
-  score: 6862
+  score: 69
   life: 1
-  difficulty: 34
-  platformScrollSpeed: 18
+  difficulty: 0
+  platformScrollSpeed: 12
   backgroundScrollSpeed: 0.08
   maxTwoLife: 0
   sendTelePortOnlyOnce: 0
+  respawnOnce: 0
+  CurrentScoreToDifficulity: 0
+  playerOnLevel: 1

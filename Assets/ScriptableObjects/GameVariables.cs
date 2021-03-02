@@ -12,7 +12,11 @@ public class GameVariables : ScriptableObject
     public float backgroundScrollSpeed;
     public bool maxTwoLife;
     public bool sendTelePortOnlyOnce;
+    public bool respawnOnce;
+    public int CurrentScoreToDifficulity;
+    public int playerOnLevel;
 
-   
+
+
 
 }

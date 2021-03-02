@@ -25,14 +25,16 @@ public class PlayerLogic : MonoBehaviour
     private float oldPlatformSpeed;
     private float oldBackgroundSpeed;
     public _UnityEventGameObject rightSideUpEvent;
-     
-    
+    public _UnityEventGameObject rightSideDownEvent;
+
 
     //float tempScore;
 
     private void Awake()
     {
         fadeScreen = GameObject.Find("FadeblackImage").GetComponent<FadeScreen>();
+        
+        gameVariables.sendTelePortOnlyOnce = false;
     }
 
 
@@ -43,16 +45,13 @@ public class PlayerLogic : MonoBehaviour
         menu.SetActive(false);
         fadeScreen.SetOpacity(1);
         StartCoroutine(fadeScreen.FadeBlackToScreen());
-        gameVariables.score = 0f;
+        
         StartCoroutine(mainPlatformCollisionAction());
         StartCoroutine(PlayerFallOffScreen());
         StartCoroutine(UpdateScoreScroll());
         //tempScore = 0;
-        gameVariables.life = 2;
+      
         lifeText.text = gameVariables.life.ToString();
-        gameVariables.platformScrollSpeed = 18;
-        gameVariables.backgroundScrollSpeed = 0.08f;
-        gameVariables.sendTelePortOnlyOnce = false;
         oldPlatformSpeed = gameVariables.platformScrollSpeed;
         oldBackgroundSpeed = gameVariables.backgroundScrollSpeed;
 
@@ -96,6 +95,17 @@ public class PlayerLogic : MonoBehaviour
         {
             rightSideUpEvent.Invoke(gameObject);
             collision.gameObject.SetActive(false);
+        }
+
+        if (collision.gameObject.name.StartsWith("RightSignDown"))
+        {
+            rightSideDownEvent.Invoke(gameObject);
+            collision.gameObject.SetActive(false);
+        }
+
+        if (collision.gameObject.name.StartsWith("Flag"))
+        {
+            StartCoroutine(FadeBlackLoadAScene("BetweenScenesStats"));
         }
 
     }
@@ -166,45 +176,6 @@ public class PlayerLogic : MonoBehaviour
         }
     }
 
-    /*
-    private IEnumerator OnCollisionEnter2D(Collision2D collision)
-    {
-        //If player hit telport platform
-        if (collision.collider.gameObject.name.StartsWith("Teleport") && rb2d.velocity.y <= 0)
-        {
-            //rb2d.AddForce(Vector2.up * 0);
-            //dust.Play();
-            //collision.gameObject.SetActive(false);
-            rb2d.gravityScale = 0;
-            gameObject.transform.position = new Vector2(-10, -45);
-            while (gameVariables.platformScrollSpeed <= 40)
-            {
-                gameVariables.backgroundScrollSpeed += 0.0001f;
-                gameVariables.platformScrollSpeed += 0.7f;
-                yield return new WaitForSeconds(0.05f);
-            }
-
-            gameVariables.backgroundScrollSpeed += 0.01f;
-
-            yield return new WaitForSeconds(2);
-            while (gameVariables.platformScrollSpeed >= oldPlatformSpeed)
-            {
-                gameVariables.platformScrollSpeed -= 0.7f;
-                //gameVariables.backgroundScrollSpeed -= 0.0001f;
-                yield return new WaitForSeconds(0.05f);
-            }
-
-            gameVariables.platformScrollSpeed = 18f;
-            //gameVariables.backgroundScrollSpeed = 0.08f;
-            gameObject.transform.position = new Vector2(-10, 7);
-            rb2d.gravityScale = 5;
-
-        }
-
-        yield return null;
-    }*/
-
-
 
     //update score as scroll to the right
     private IEnumerator UpdateScoreScroll()
@@ -261,15 +232,28 @@ public class PlayerLogic : MonoBehaviour
                 
             if (gameVariables.life == 1 && gameObject.transform.position.y < -50)
             {
-                //StartCoroutine(fadeScreen.FadeToBlackScreen());
-                menu.SetActive(true);
-                //SceneManager.LoadScene("Gameplay");
+                gameVariables.life--;
+                StartCoroutine(fadeScreen.FadeToBlackScreen());
+                //menu.SetActive(true);
+                //gameVariables.difficulty = 0;
+                //gameVariables.score = 0;
+                //gameVariables.CurrentScoreToDifficulity = 0;
+                
+                SceneManager.LoadScene("BetweenScenesStats");
             }
             
             yield return new WaitForSeconds(0.5f);
         }
 
 
+    }
+
+
+    private IEnumerator FadeBlackLoadAScene(string SceneToLoad)
+    {
+        StartCoroutine(fadeScreen.FadeToBlackScreen());
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene(SceneToLoad);
     }
 
 
