@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class DDOL : MonoBehaviour
 {
@@ -13,10 +14,14 @@ public class DDOL : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
+
+        gameVariables.jumpForce = 725f;
         gameVariables.playerOnLevel = 1;
         gameVariables.score = 0f;
+        gameVariables.highScore = 0f;
         gameVariables.difficulty = 0;
         gameVariables.life = 1;
+        gameVariables.coin = 0;
         gameVariables.backgroundScrollSpeed = 0.08f;
         gameVariables.CurrentScoreToDifficulity = 0;
         Application.targetFrameRate = 60;

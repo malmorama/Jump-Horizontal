@@ -6,7 +6,9 @@ using UnityEngine;
 public class GameVariables : ScriptableObject
 {
     public float score;
+    public float highScore;
     public int life;
+    public int coin;
     public int difficulty;
     public float platformScrollSpeed;
     public float backgroundScrollSpeed;
@@ -15,6 +17,7 @@ public class GameVariables : ScriptableObject
     public bool respawnOnce;
     public int CurrentScoreToDifficulity;
     public int playerOnLevel;
+    public float jumpForce;
 
 
 

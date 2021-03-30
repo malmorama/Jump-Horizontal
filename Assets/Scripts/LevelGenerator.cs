@@ -40,7 +40,7 @@ public class LevelGenerator : MonoBehaviour
     public void LevelGeneratorMetod(int levelID, Collider2D collision)
     {
         
-        print(levelID + collision.gameObject.name);
+        //print(levelID + collision.gameObject.name);
         if (levelID == levelGeneratorVariables.levelIDHeader)
         {
             //only generate based on platform, all other is just deactivated as hit the collider
@@ -67,8 +67,10 @@ public class LevelGenerator : MonoBehaviour
             //run metod that only sends one platform with flag on top
             if(gameVariables.respawnOnce == false)
             {
-                RespawnObjectWithObjectOnTop(collision, levelGeneratorVariables.levelContent[0].objRespawn, levelGeneratorVariables.levelContent[0].objOnTop,
-                    levelGeneratorVariables.levelContent[0].objOnTopHeight);
+                Vector2 flagPlatformPos = new Vector2(Camera.main.transform.position.x + 65, 0);
+                Vector2 flagPos = new Vector2(Camera.main.transform.position.x + 65, 0 + levelGeneratorVariables.levelContent[0].objOnTopHeight);
+                ObjectPooler.Instance.SpawnFromPool(levelGeneratorVariables.levelContent[0].objRespawn, flagPlatformPos, Quaternion.identity); // the flagplatform
+                ObjectPooler.Instance.SpawnFromPool(levelGeneratorVariables.levelContent[0].objOnTop, flagPos, Quaternion.identity); // the flag
                 gameVariables.respawnOnce = true;
             }
             

@@ -9,16 +9,11 @@ using UnityEngine.Events;
 
 public class PlayerLogic : MonoBehaviour
 {
-    public float jumpForce;
+    //public float jumpForce;
     private Rigidbody2D rb2d;
-    public Text lifeText;
-    public Text scoreText;
     public GameObject menu;
-    //private float score = 0f;
     FadeScreen fadeScreen;
-    public AudioSource coinCollectSound;
-    public AudioSource playerJumpSound;
-    public AudioSource teleportSound;
+    AudioManager audioManager;
     public ParticleSystem dust;
     public GameVariables gameVariables;
     private bool collideWithPlatform = false;
@@ -26,14 +21,17 @@ public class PlayerLogic : MonoBehaviour
     private float oldBackgroundSpeed;
     public _UnityEventGameObject rightSideUpEvent;
     public _UnityEventGameObject rightSideDownEvent;
-
+    public GameObject heliAnimation;
+    public UnityEvent teleportEvent;
+    public UnityEvent respawnWithHelicopterEvent;
 
     //float tempScore;
 
     private void Awake()
     {
         fadeScreen = GameObject.Find("FadeblackImage").GetComponent<FadeScreen>();
-        
+        audioManager = GameObject.Find("Managers").GetComponent<AudioManager>();
+
         gameVariables.sendTelePortOnlyOnce = false;
     }
 
@@ -51,7 +49,7 @@ public class PlayerLogic : MonoBehaviour
         StartCoroutine(UpdateScoreScroll());
         //tempScore = 0;
       
-        lifeText.text = gameVariables.life.ToString();
+        //lifeText.text = gameVariables.life.ToString();
         oldPlatformSpeed = gameVariables.platformScrollSpeed;
         oldBackgroundSpeed = gameVariables.backgroundScrollSpeed;
 
@@ -65,19 +63,20 @@ public class PlayerLogic : MonoBehaviour
         if (collision.gameObject.name.StartsWith("Gold"))
         {
             //score += 50f;
-            gameVariables.score += 50f;
-            scoreText.text = Mathf.Round(gameVariables.score).ToString();
+            gameVariables.coin += 1;
+            //scoreText.text = Mathf.Round(gameVariables.score).ToString();
             collision.gameObject.SetActive(false);
-            coinCollectSound.Play();
+            audioManager.Play("CoinCollectSound");
+            
         }
         //if collide with pink diamond 500 points score
         if (collision.gameObject.name.StartsWith("Pink"))
         {
             //score += 500f;
-            gameVariables.score += 500f;
-            scoreText.text = Mathf.Round(gameVariables.score).ToString();
+            gameVariables.coin += 25;
+            //scoreText.text = Mathf.Round(gameVariables.score).ToString();
             collision.gameObject.SetActive(false);
-            coinCollectSound.Play();
+            audioManager.Play("CoinCollectSound");
         }
 
         //if collide with heart 1 lift point, max lift point is 2 
@@ -85,9 +84,9 @@ public class PlayerLogic : MonoBehaviour
         {
             
             gameVariables.life += 1;
-            lifeText.text = Mathf.Round(gameVariables.life).ToString();
+            //lifeText.text = Mathf.Round(gameVariables.life).ToString();
             collision.gameObject.SetActive(false);
-            //coinCollectSound.Play();
+            audioManager.Play("HeartCollectSound");
         }
 
         //If player hit rightsideupsign
@@ -105,6 +104,9 @@ public class PlayerLogic : MonoBehaviour
 
         if (collision.gameObject.name.StartsWith("Flag"))
         {
+            gameVariables.playerOnLevel++;
+            gameVariables.difficulty = 0;   //reset difficulty for next level
+            gameVariables.CurrentScoreToDifficulity = 0;
             StartCoroutine(FadeBlackLoadAScene("BetweenScenesStats"));
         }
 
@@ -128,17 +130,34 @@ public class PlayerLogic : MonoBehaviour
         }
 
         //If player hit main platform jump 
-        if (collision.collider.gameObject.name.StartsWith("Platform") && rb2d.velocity.y <= 0)
+        if (collision.collider.gameObject.name.StartsWith("Platform")  && rb2d.velocity.y <= 0)
         {
             //at first collision set bool to true to can not jump twice. Then in a coroutne change it back with delay
             if (collideWithPlatform == false)
             {
                 collideWithPlatform = true;
-                rb2d.AddForce(Vector2.up * jumpForce);
-                dust.Play();
-                playerJumpSound.Play();
+                rb2d.AddForce(Vector2.up * gameVariables.jumpForce);
+                //TrailDust
+                TrailDust(collision);
+     
+                audioManager.Play("PlayerJump");
+
             }
         }
+
+        //If player hit main platform jump 
+        if (collision.collider.gameObject.name.StartsWith("FlagPlatform") && rb2d.velocity.y <= 0)
+        {
+            //at first collision set bool to true to can not jump twice. Then in a coroutne change it back with delay
+            if (collideWithPlatform == false)
+            {
+                collideWithPlatform = true;
+                rb2d.AddForce(Vector2.up * gameVariables.jumpForce);
+                //dust.Play();
+                audioManager.Play("PlayerJump");
+            }
+        }
+
 
         if (collision.collider.gameObject.name.StartsWith("BrownPlatform") && rb2d.velocity.y <= 0)
         {
@@ -146,23 +165,35 @@ public class PlayerLogic : MonoBehaviour
             if (collideWithPlatform == false)
             {
                 collideWithPlatform = true;
-                rb2d.AddForce(Vector2.up * jumpForce);
-                dust.Play();
-                playerJumpSound.Play();
+                rb2d.AddForce(Vector2.up * gameVariables.jumpForce);
+                //dust.Play();
+                audioManager.Play("PlayerJump");
             }
         }
 
 
         if (collision.collider.gameObject.name.StartsWith("TeleportPlatform") && rb2d.velocity.y <= 0)
         {
-            teleportSound.Play();
-            StartCoroutine(TelePortPlatformCoroutine());
+            
+            teleportEvent.Invoke();
+            //StartCoroutine(TelePortPlatformCoroutine());
         }
 
 
     }
 
-
+    //find the contact point on the impact oncollision and spawn the dust here
+    private void TrailDust(Collision2D collision)
+    {
+        ContactPoint2D[] contacts = new ContactPoint2D[10];
+        int numContacts = collision.GetContacts(contacts);
+        
+        Vector2 pos = new Vector2(contacts[0].point.x - 2, contacts[0].point.y);
+        GameObject cloudObj = ObjectPooler.Instance.SpawnFromPool("DustCloud", pos, Quaternion.identity);
+        ParticleSystem cloud = cloudObj.GetComponent<ParticleSystem>();
+        //ParticleSystem cloud = Instantiate(dust, pos, collision.gameObject.transform.rotation);
+        cloud.Play();
+    }
 
 
     
@@ -194,7 +225,7 @@ public class PlayerLogic : MonoBehaviour
                 gameVariables.score = 0;
             }
 
-            scoreText.text = Mathf.Round(gameVariables.score).ToString();
+            //scoreText.text = Mathf.Round(gameVariables.score).ToString();
             yield return new WaitForSeconds(0.01f);
         }
         
@@ -208,37 +239,16 @@ public class PlayerLogic : MonoBehaviour
             //reload scence if player below screen
             if (gameObject.transform.position.y < -50 && gameVariables.life >= 2)
             {
-
-                //respawn player above a position of an active platform, reduce life with 1, move player to position in screen
-                GameObject tempPlatform = GameObject.FindWithTag("Platform");
-                Vector2 respawnPlayerPosition = new Vector2(tempPlatform.transform.position.x, tempPlatform.transform.position.y + 7);
-                //Vector2 respawnPlayerPosition = new Vector2(-10, 25);
-                //transform.position = respawnPlayerPosition;
-                float moveSpeed = 35f;
-                 
-                while (transform.position.y < respawnPlayerPosition.y)
-                {
-                    rb2d.velocity = new Vector2(rb2d.velocity.x, moveSpeed);
-                    //transform.position = Vector2.MoveTowards(transform.position, respawnPlayerPosition, moveSpeed );
-                    yield return null;
-                }
-
-                gameVariables.life--;
-                lifeText.text = gameVariables.life.ToString();
-
-                //yield return new WaitForSeconds(3);
-
+                
+                respawnWithHelicopterEvent.Invoke();
+              
             }
                 
             if (gameVariables.life == 1 && gameObject.transform.position.y < -50)
             {
+                audioManager.Play("PlayerDeathSound");
                 gameVariables.life--;
                 StartCoroutine(fadeScreen.FadeToBlackScreen());
-                //menu.SetActive(true);
-                //gameVariables.difficulty = 0;
-                //gameVariables.score = 0;
-                //gameVariables.CurrentScoreToDifficulity = 0;
-                
                 SceneManager.LoadScene("BetweenScenesStats");
             }
             
@@ -259,6 +269,7 @@ public class PlayerLogic : MonoBehaviour
 
     private IEnumerator TelePortPlatformCoroutine()
     {
+        audioManager.Play("TeleportSound");
         gameVariables.sendTelePortOnlyOnce = true;
         float telePortScore = 5f;
         float telePortPlatformSpeed = 50;
@@ -278,7 +289,7 @@ public class PlayerLogic : MonoBehaviour
             //gameVariables.backgroundScrollSpeed += telePortIncreaseBackgroundSpeed;
             gameVariables.platformScrollSpeed += telePortIncreasePlatformSpeed;
             gameVariables.score += telePortScore;
-            scoreText.text = Mathf.Round(gameVariables.score).ToString();
+            //scoreText.text = Mathf.Round(gameVariables.score).ToString();
             yield return new WaitForSeconds(0.010f);
         }
 
@@ -293,7 +304,7 @@ public class PlayerLogic : MonoBehaviour
             gameVariables.platformScrollSpeed -= telePortIncreasePlatformSpeed;
             //gameVariables.backgroundScrollSpeed -= telePortIncreaseBackgroundSpeed;
             gameVariables.score += telePortScore;
-            scoreText.text = Mathf.Round(gameVariables.score).ToString();
+            //scoreText.text = Mathf.Round(gameVariables.score).ToString();
             yield return new WaitForSeconds(0.010f);
         }
         
@@ -309,15 +320,15 @@ public class PlayerLogic : MonoBehaviour
         Vector2 position2 = new Vector2(30, 5); // portal position
         GameObject tempPlat = ObjectPooler.Instance.SpawnFromPool("Platform", position, Quaternion.identity);
         GameObject tempPlat2 = ObjectPooler.Instance.SpawnFromPool("Teleportstation", position2, Quaternion.identity);
-        teleportSound.Play();
+        audioManager.Play("TeleportSound");
 
         yield return new WaitForSeconds(1.5f);
         tempPlat2.SetActive(false);
         gameObject.transform.position = tempPlat.transform.position;
         //yield return new WaitForSeconds(0.5f);
         rb2d.gravityScale = 5;
-        jumpForce = 800;
-        rb2d.AddForce(Vector2.up * jumpForce);
+        //gameVariables.jumpForce = 800;
+        rb2d.AddForce(Vector2.up * gameVariables.jumpForce);
 
         gameVariables.sendTelePortOnlyOnce = false;
 

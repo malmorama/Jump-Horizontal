@@ -21,6 +21,6 @@ MonoBehaviour:
     methodActive: 1
     randomNumberFrom: 1
     randomNumberTo: 1
-    objRespawn: Platform
+    objRespawn: FlagPlatform
     objOnTop: Flag
     objOnTopHeight: 2

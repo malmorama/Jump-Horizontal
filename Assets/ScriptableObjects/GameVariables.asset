@@ -12,13 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87049cae8030e40719b2e6510592abcd, type: 3}
   m_Name: GameVariables
   m_EditorClassIdentifier: 
-  score: 69
+  score: 203.5
+  highScore: 203.5
   life: 1
-  difficulty: 0
+  coin: 0
+  difficulty: 1
   platformScrollSpeed: 12
   backgroundScrollSpeed: 0.08
   maxTwoLife: 0
   sendTelePortOnlyOnce: 0
   respawnOnce: 0
-  CurrentScoreToDifficulity: 0
+  CurrentScoreToDifficulity: 1
   playerOnLevel: 1
+  jumpForce: 725

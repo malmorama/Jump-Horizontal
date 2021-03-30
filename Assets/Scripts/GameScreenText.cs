@@ -6,23 +6,45 @@ using TMPro;
 
 public class GameScreenText : MonoBehaviour
 {
+    [System.Serializable]
+    public class GameInstructionsClass
+    {
+        
+        public int levelId;
+        public string instructionsText1;
+        public string instructionsText2;
+
+
+    }
+
+    public List<GameInstructionsClass> gameInstructionsClass;
+
     public GameVariables gameVariables;
     public Text printDifficulty;
+    public Text scoreText;
+    public Text lifeText;
+    public Text highScoreText;
+    public Text coinText;
     private int oldDifficulty;
     public TextMeshProUGUI gameInstructions;
+    public GameObject phone;
     bool runningGameInstructionsCoroutine;
     //private int oldDifficulty;
+    //int oldLevelId;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        //gameInstructions = GameObject.Find("Canvas").GetComponent<GameInstructions>();
-        //gameVariables.score = 0f;
+        
         gameInstructions.gameObject.SetActive(false);
         oldDifficulty = gameVariables.difficulty;
-        StartCoroutine(PrintScreenText());
-        runningGameInstructionsCoroutine = false;
+        StartCoroutine(PrintScreenText());              //print the screen text difficulty, score, high score etc
+        if (gameVariables.playerOnLevel == 1)           //only the level do we print the instructions
+        {
+            StartCoroutine(Level1GameInstruction());
+        }
+        runningGameInstructionsCoroutine = false;       //this is set to false every time we run load the scen and allow metod to print game instruction tex
         //StartCoroutine(GameLogic());
 
 
@@ -36,38 +58,83 @@ public class GameScreenText : MonoBehaviour
 
     }
 
+    //the method that prints text based on what level you are on, input from even on levelgenerator and print based on class in script
     public void PrintStartNewLevelText(int levelId, Collider2D collision)
     {
+        
+        foreach(GameInstructionsClass gs in gameInstructionsClass)
+        { 
 
-        if (levelId == 110 && runningGameInstructionsCoroutine == false)
-        {
-            StartCoroutine(GameInstructions("LEVEL 1"));
+            if (gs.levelId == levelId && runningGameInstructionsCoroutine == false)
+            {
+          
+                StartCoroutine(GameInstructionsRoutine(gs.instructionsText1, gs.instructionsText2, 1.5f));
+                //oldLevelId = levelId;
+            }
+           
         }
 
-        if (levelId == 121 && runningGameInstructionsCoroutine == false)
-        {
-            StartCoroutine(GameInstructions("LEVEL 2"));
-        }
-
-        if (levelId == 111 || levelId == 122)
-        {
-            runningGameInstructionsCoroutine = false;
-        }
 
     }
 
+    //print only on start of game how to move player
+    private IEnumerator Level1GameInstruction()
+    {
+        StartCoroutine(GameInstructions("TAP THE SCREEN!", 1.3f));
+        yield return new WaitForSeconds(6);
+        phone.gameObject.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        phone.gameObject.SetActive(false);
+        //yield return new WaitForSeconds(1f);
+        //StartCoroutine(GameInstructions("LEVEL 1", 1.5f));
+        runningGameInstructionsCoroutine = false;
+    }
+
+
+
+    // gameplay UI text
     private IEnumerator PrintScreenText()
     {
         while (true)
         {
             printDifficulty.text = Mathf.RoundToInt(gameVariables.difficulty).ToString();
-            yield return new WaitForSeconds(0.5f);
+            scoreText.text = Mathf.Round(gameVariables.score).ToString();
+            lifeText.text = gameVariables.life.ToString();
+            coinText.text = gameVariables.coin.ToString();
+            UpdateHighscore();
+            highScoreText.text = Mathf.Round(gameVariables.highScore).ToString();
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
-    private IEnumerator GameInstructions (string text)
+    //update highscore if score larger than HS
+    private void UpdateHighscore()
+    {
+        if(gameVariables.score > gameVariables.highScore)
+        {
+            gameVariables.highScore = gameVariables.score;
+        }
+    }
+
+   
+
+
+    //coroutine that prints two messages after waiting for the first one
+    private IEnumerator GameInstructionsRoutine (string text1, string text2, float textSize)    
     {
         runningGameInstructionsCoroutine = true;
+        yield return StartCoroutine(GameInstructions(text1, textSize));
+        Coroutine b = StartCoroutine(GameInstructions(text2, textSize));
+        yield return b;
+        //yield return new WaitForSeconds(30); //wait long enough so move from level 111 to 112
+        //runningGameInstructionsCoroutine = false;
+    }
+
+
+    //the method that shows the name of each level as start a new level (scale up and fade out the text)
+    private IEnumerator GameInstructions (string text, float textSize)
+    {
+        //runningGameInstructionsCoroutine = true;
         gameInstructions.text = text;
         Color color = gameInstructions.color;
         color.a = 1;
@@ -76,7 +143,7 @@ public class GameScreenText : MonoBehaviour
         gameInstructions.gameObject.SetActive(true);
         yield return new WaitForSeconds(1);
         float i = 0;
-        while (gameInstructions.gameObject.transform.localScale.x < 1.5f)
+        while (gameInstructions.gameObject.transform.localScale.x < textSize)
         {
             i += 0.05f;
             gameInstructions.gameObject.transform.localScale = new Vector2(gameInstructions.gameObject.transform.localScale.x + i,
@@ -84,41 +151,17 @@ public class GameScreenText : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
         //yield return new WaitForSeconds(0.5f);
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(3);
         gameInstructions.CrossFadeAlpha(0, 1, false);
         yield return new WaitForSeconds(2);
         gameInstructions.gameObject.SetActive(false);
-        
+        //runningGameInstructionsCoroutine = false;
 
     }
 
-    private IEnumerator GameLogic()
-    {
-        while (true)
-        {
-            if (difficultyChange())
-            {
-                switch(gameVariables.difficulty)
-                {
-                    case 0:
-                        //do nothing
-                        break;
-                    case 1:
-                        //do nothing
-                        break;
-                    case 2:
-                        //yield return StartCoroutine(GameInstructions("CATCH THE COINS FOR EXTRA POINTS!"));
-                        break;
-                    default:
-                        break;
-                }
-            }
-            yield return null;
+   
 
-        }
-    }
-
-   //if difficulty change return true GameLogic change in the loop 
+   //if difficulty change return true GameLogic change in the loop - not used
    private bool difficultyChange()
     {
         if(oldDifficulty != gameVariables.difficulty)

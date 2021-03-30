@@ -10,7 +10,7 @@ public class RespawnColliderScript : MonoBehaviour
    [System.Serializable]
     public class Level
     {
-        //public int level;
+        public int level;
         public int levelId;
         public int difficultyFrom;
         public int difficultyTo;
@@ -37,6 +37,7 @@ public class RespawnColliderScript : MonoBehaviour
         objectsToCheck.Add("Heart");
         objectsToCheck.Add("Teleportstation");
         objectsToCheck.Add("RightSignUp");
+        objectsToCheck.Add("DustCloud");
         //send std platform if collider hits these
         respawnOtherObject.Add("TeleportPlatform");
         respawnOtherObject.Add("Spring");
@@ -80,7 +81,7 @@ public class RespawnColliderScript : MonoBehaviour
     {
         foreach (Level level in levels)
         {
-            if (difficulty >= level.difficultyFrom && difficulty <= level.difficultyTo)
+            if (difficulty >= level.difficultyFrom && difficulty <= level.difficultyTo & gameVariables.playerOnLevel == level.level)
             {
                 //print(level.levelId);
                 //send levelid, collider to levelgeneratorscript

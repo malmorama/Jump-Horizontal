@@ -5,7 +5,7 @@ using UnityEngine;
 public class ScrollText : MonoBehaviour
 {
     // Start is called before the first frame update
-    float scrollSpeed = 30f;
+    float scrollSpeed = 20f;
 
 
     // Start is called before the first frame update

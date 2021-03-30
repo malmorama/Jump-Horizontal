@@ -15,12 +15,33 @@ MonoBehaviour:
   Level: 2
   levelIDHeader: 121
   randomNumberGeneratedFrom: 1
-  randomNumberGeneratedTo: 40
+  randomNumberGeneratedTo: 60
   levelContent:
   - methodName: RespawnAnotherObject
     methodActive: 1
     randomNumberFrom: 1
-    randomNumberTo: 40
+    randomNumberTo: 5
     objRespawn: BrownPlatform
+    objOnTop: 
+    objOnTopHeight: 0
+  - methodName: RespawnObjectWithObjectOnTop
+    methodActive: 1
+    randomNumberFrom: 6
+    randomNumberTo: 20
+    objRespawn: Platform
+    objOnTop: Gold
+    objOnTopHeight: 3
+  - methodName: RespawnObjectWithObjectOnTop
+    methodActive: 1
+    randomNumberFrom: 21
+    randomNumberTo: 23
+    objRespawn: Platform
+    objOnTop: Pink
+    objOnTopHeight: 3
+  - methodName: RespawnAnotherObject
+    methodActive: 1
+    randomNumberFrom: 26
+    randomNumberTo: 30
+    objRespawn: TeleportPlatform
     objOnTop: 
     objOnTopHeight: 0
