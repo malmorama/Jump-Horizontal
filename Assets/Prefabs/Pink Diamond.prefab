@@ -52,6 +52,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -156,7 +157,7 @@ Halo:
   m_Enabled: 1
   m_Color:
     serializedVersion: 2
-    rgba: 4294443252
+    rgba: 4282065492
   m_Size: 4
 --- !u!114 &6464183736736983071
 MonoBehaviour:
@@ -178,11 +179,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6464183736736983068}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 18a5104c83d324b9d9abdaa8680171e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameVariables: {fileID: 11400000, guid: 72338892b3e294b8ea69161557f5128c, type: 2}
 --- !u!95 &6464183736736983044
 Animator:
   serializedVersion: 3

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//takes the platform added on to the scene in the editor and at game play destroys them and load an object from the object pool at the same
+//position
 public class StartScreenObjToPool : MonoBehaviour
 {
     private GameObject[] objectsFromStartScreen;

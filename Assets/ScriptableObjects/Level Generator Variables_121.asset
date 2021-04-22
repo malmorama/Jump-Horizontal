@@ -15,7 +15,9 @@ MonoBehaviour:
   Level: 2
   levelIDHeader: 121
   randomNumberGeneratedFrom: 1
-  randomNumberGeneratedTo: 60
+  randomNumberGeneratedTo: 75
+  platformScrollSpeed: 14
+  backgroundScrollSpeed: 0.07
   levelContent:
   - methodName: RespawnAnotherObject
     methodActive: 1
@@ -26,22 +28,29 @@ MonoBehaviour:
     objOnTopHeight: 0
   - methodName: RespawnObjectWithObjectOnTop
     methodActive: 1
-    randomNumberFrom: 6
-    randomNumberTo: 20
+    randomNumberFrom: 11
+    randomNumberTo: 40
     objRespawn: Platform
     objOnTop: Gold
     objOnTopHeight: 3
   - methodName: RespawnObjectWithObjectOnTop
     methodActive: 1
-    randomNumberFrom: 21
-    randomNumberTo: 23
+    randomNumberFrom: 41
+    randomNumberTo: 41
     objRespawn: Platform
     objOnTop: Pink
     objOnTopHeight: 3
   - methodName: RespawnAnotherObject
     methodActive: 1
-    randomNumberFrom: 26
-    randomNumberTo: 30
-    objRespawn: TeleportPlatform
+    randomNumberFrom: 42
+    randomNumberTo: 45
+    objRespawn: UpDownKill
+    objOnTop: 
+    objOnTopHeight: 0
+  - methodName: RespawnAnotherObject
+    methodActive: 1
+    randomNumberFrom: 46
+    randomNumberTo: 48
+    objRespawn: SendCoinsEventPlatform
     objOnTop: 
     objOnTopHeight: 0

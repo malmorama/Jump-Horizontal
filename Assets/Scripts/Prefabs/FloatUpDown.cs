@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//used attached to pink diamond prefab.
 public class FloatUpDown : MonoBehaviour
 {
     private float yTop;
     private float yLow;
     private float scrollSpeedY;
+    private float scrollSpeedYTurn;
+    private float scrollSpeedYStart;
+    public GameVariables gameVariables;
 
 
     // Start is called before the first frame update
@@ -14,7 +18,9 @@ public class FloatUpDown : MonoBehaviour
     {
         yTop = gameObject.transform.position.y + 4f;
         yLow = gameObject.transform.position.y - 0f;
-        scrollSpeedY = 4f;
+        scrollSpeedY = gameVariables.brownPlatformScrollSpeed;
+        scrollSpeedYStart = scrollSpeedY; 
+        scrollSpeedYTurn = -1f * scrollSpeedY;
     }
 
     // Update is called once per frame
@@ -25,11 +31,11 @@ public class FloatUpDown : MonoBehaviour
 
         if (gameObject.transform.position.y > yTop)
         {
-            scrollSpeedY = -4f;
+            scrollSpeedY = scrollSpeedYTurn;
         }
         if (gameObject.transform.position.y < yLow)
         {
-            scrollSpeedY = 4f;
+            scrollSpeedY = scrollSpeedYStart;
         }
     }
 }

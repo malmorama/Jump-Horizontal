@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Platform
   - StartPlatform
+  - Heart
+  - HeliPrefab
   layers:
   - Default
   - TransparentFX

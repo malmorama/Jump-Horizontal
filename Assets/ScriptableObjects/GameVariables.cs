@@ -10,14 +10,24 @@ public class GameVariables : ScriptableObject
     public int life;
     public int coin;
     public int difficulty;
+    public int CurrentScoreToDifficulity;
+
     public float platformScrollSpeed;
     public float backgroundScrollSpeed;
-    public bool maxTwoLife;
+    public float brownPlatformScrollSpeed;
+
+    
     public bool sendTelePortOnlyOnce;
     public bool respawnOnce;
-    public int CurrentScoreToDifficulity;
+    
     public int playerOnLevel;
     public float jumpForce;
+    public bool maxTwoLife;
+
+    public bool theMountainsSongIsPlaying;
+    public bool allMusicOn;
+
+    public float missileSpeed;
 
 
 

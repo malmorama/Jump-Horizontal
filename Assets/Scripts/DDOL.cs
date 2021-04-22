@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 
+//called on the preload sceen. Sets global variables, increases the difficulty
 public class DDOL : MonoBehaviour
 {
     public GameVariables gameVariables;
@@ -15,6 +16,7 @@ public class DDOL : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
 
+        gameVariables.brownPlatformScrollSpeed = 4f;
         gameVariables.jumpForce = 725f;
         gameVariables.playerOnLevel = 1;
         gameVariables.score = 0f;
@@ -22,8 +24,16 @@ public class DDOL : MonoBehaviour
         gameVariables.difficulty = 0;
         gameVariables.life = 1;
         gameVariables.coin = 0;
-        gameVariables.backgroundScrollSpeed = 0.08f;
+        //gameVariables.backgroundScrollSpeed = 0.06f;
+        //gameVariables.platformScrollSpeed = 12f;
+        gameVariables.missileSpeed = 25f;
+
         gameVariables.CurrentScoreToDifficulity = 0;
+
+        gameVariables.theMountainsSongIsPlaying = false;
+        gameVariables.allMusicOn = true;
+
+
         Application.targetFrameRate = 60;
     }
 
@@ -75,5 +85,8 @@ public class DDOL : MonoBehaviour
 
 
     }
+
+
+     
 
 }

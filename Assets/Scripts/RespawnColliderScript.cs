@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+//the collider to the right. detacts what hits it and deactivate game obj based on list or or send std platform based on list
+//otherwise loop through the class on the script to check what level and level id and difficulty game is on and sends this to the level generator
+//who generate content based on the scriptable object
+
 [System.Serializable] public class _UnityEventLevelGenerator : UnityEvent<int, Collider2D> { }
 
 public class RespawnColliderScript : MonoBehaviour
@@ -14,6 +18,7 @@ public class RespawnColliderScript : MonoBehaviour
         public int levelId;
         public int difficultyFrom;
         public int difficultyTo;
+        public bool flagLevel;
          
     }
 
@@ -28,8 +33,6 @@ public class RespawnColliderScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-
         //objectsProbability = new Dictionary<string, Queue<int>>();
         //objects to deactivate if they hit the respawn collider
         objectsToCheck.Add("Gold");
@@ -38,10 +41,20 @@ public class RespawnColliderScript : MonoBehaviour
         objectsToCheck.Add("Teleportstation");
         objectsToCheck.Add("RightSignUp");
         objectsToCheck.Add("DustCloud");
+        objectsToCheck.Add("HeliPrefab");
+        objectsToCheck.Add("Missile");
+        
         //send std platform if collider hits these
         respawnOtherObject.Add("TeleportPlatform");
         respawnOtherObject.Add("Spring");
         respawnOtherObject.Add("BrownPlatform");
+        respawnOtherObject.Add("UpDownKill");
+        respawnOtherObject.Add("SendCoinsEventPlatform");
+        respawnOtherObject.Add("SendMissileEventPlatform");
+
+
+
+
     }
 
 
@@ -81,7 +94,7 @@ public class RespawnColliderScript : MonoBehaviour
     {
         foreach (Level level in levels)
         {
-            if (difficulty >= level.difficultyFrom && difficulty <= level.difficultyTo & gameVariables.playerOnLevel == level.level)
+            if (difficulty >= level.difficultyFrom && difficulty <= level.difficultyTo && gameVariables.playerOnLevel == level.level)
             {
                 //print(level.levelId);
                 //send levelid, collider to levelgeneratorscript
@@ -148,6 +161,11 @@ public class RespawnColliderScript : MonoBehaviour
     private void MoveObject(Collider2D collision)
     {
         collision.gameObject.transform.position = new Vector2(Camera.main.transform.position.x + (42 * Random.Range(1f, 1.1f)), Random.Range(-15f, 10f));
+    }
+
+    public void PrintTest()
+    {
+        print("Test");
     }
 
 

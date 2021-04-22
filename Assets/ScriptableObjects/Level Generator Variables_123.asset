@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9978cd9a8914c42a1be65bda4bc91c9e, type: 3}
+  m_Name: Level Generator Variables_123
+  m_EditorClassIdentifier: 
+  Level: 2
+  levelIDHeader: 122
+  randomNumberGeneratedFrom: 1
+  randomNumberGeneratedTo: 75
+  platformScrollSpeed: 14
+  backgroundScrollSpeed: 0.07
+  levelContent:
+  - methodName: RespawnAnotherObject
+    methodActive: 1
+    randomNumberFrom: 1
+    randomNumberTo: 5
+    objRespawn: BrownPlatform
+    objOnTop: 
+    objOnTopHeight: 0
+  - methodName: RespawnObjectWithObjectOnTop
+    methodActive: 1
+    randomNumberFrom: 11
+    randomNumberTo: 40
+    objRespawn: Platform
+    objOnTop: Gold
+    objOnTopHeight: 3
+  - methodName: RespawnObjectWithObjectOnTop
+    methodActive: 1
+    randomNumberFrom: 41
+    randomNumberTo: 41
+    objRespawn: Platform
+    objOnTop: Pink
+    objOnTopHeight: 3
+  - methodName: RespawnAnotherObject
+    methodActive: 1
+    randomNumberFrom: 42
+    randomNumberTo: 45
+    objRespawn: UpDownKill
+    objOnTop: 
+    objOnTopHeight: 0
+  - methodName: RespawnAnotherObject
+    methodActive: 1
+    randomNumberFrom: 46
+    randomNumberTo: 48
+    objRespawn: SendCoinsEventPlatform
+    objOnTop: 
+    objOnTopHeight: 0
+  - methodName: RespawnObjectWithObjectOnTop
+    methodActive: 1
+    randomNumberFrom: 49
+    randomNumberTo: 50
+    objRespawn: SendMissileEventPlatform
+    objOnTop: 
+    objOnTopHeight: 1
+  - methodName: RespawnAnotherObject
+    methodActive: 1
+    randomNumberFrom: 53
+    randomNumberTo: 54
+    objRespawn: Spring
+    objOnTop: 
+    objOnTopHeight: 1

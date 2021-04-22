@@ -1,6 +1,7 @@
 using UnityEngine.Audio;
 using UnityEngine;
 
+//the class used by audiomanager to controll below
 [System.Serializable]
 public class Sound {
     public string name;

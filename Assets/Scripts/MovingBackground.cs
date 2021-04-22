@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//moves the background in a loop
 public class MovingBackground : MonoBehaviour
 {
     public GameVariables gameVariables;

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//scroll cloads on the mainmenu sceen but no used now
 public class ScrollCloud : MonoBehaviour
 {
     [SerializeField]

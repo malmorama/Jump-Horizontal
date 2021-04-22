@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+
+//send these coins when player collect this collectables which is a prefab. Communicated to via event from player logic
 public class RightSign : MonoBehaviour
 {
     public float offset = 2f;

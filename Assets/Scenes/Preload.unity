@@ -244,43 +244,49 @@ MonoBehaviour:
   sounds:
   - name: PlayerJump
     clip: {fileID: 8300000, guid: 874591a49978a472293b6423b4de97c8, type: 3}
-    volume: 1
+    volume: 0.792
     pitch: 1.5
     source: {fileID: 0}
     loop: 0
   - name: HelicopterSound
     clip: {fileID: 8300000, guid: 031085334433d4c9aa35370444d01530, type: 3}
-    volume: 0.91
+    volume: 0.214
     pitch: 1
     source: {fileID: 0}
     loop: 0
   - name: CoinCollectSound
     clip: {fileID: 8300000, guid: 121aa1d701a22489c9c8a96705b4b6e7, type: 3}
-    volume: 0.503
+    volume: 0.154
     pitch: 1.1
     source: {fileID: 0}
     loop: 0
   - name: TeleportSound
     clip: {fileID: 8300000, guid: 6637d7906e8194cfab0dc6e67adb4481, type: 3}
-    volume: 0.5
+    volume: 0.234
     pitch: 1
     source: {fileID: 0}
     loop: 0
   - name: HeartCollectSound
-    clip: {fileID: 8300000, guid: c952c74dd0dfb5c44b632b0c5564c936, type: 3}
-    volume: 0.766
+    clip: {fileID: 8300000, guid: 7c763e87ab2014ed2baf1b2b03d4c852, type: 3}
+    volume: 0.473
     pitch: 1
     source: {fileID: 0}
     loop: 0
   - name: PlayerDeathSound
-    clip: {fileID: 8300000, guid: 2e21be6ddc4584a979bd0762a3381a12, type: 3}
-    volume: 0.7
+    clip: {fileID: 8300000, guid: be19c2bd4193e41e2a9f985f0caa1d4a, type: 3}
+    volume: 0.413
     pitch: 1
     source: {fileID: 0}
     loop: 0
   - name: StartScreenMusic
-    clip: {fileID: 8300000, guid: 63e2d732badada7439c476ac14746617, type: 3}
-    volume: 0.605
+    clip: {fileID: 8300000, guid: dd3095cb5e07b4dc595cdeacb6c29079, type: 3}
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 1
+  - name: TheMountainsSong
+    clip: {fileID: 8300000, guid: 0d604f01d17864ea587b9170a2fdfe6c, type: 3}
+    volume: 1
     pitch: 1
     source: {fileID: 0}
     loop: 1

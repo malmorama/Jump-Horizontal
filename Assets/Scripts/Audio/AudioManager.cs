@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using UnityEngine.Audio;
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
+//attach music and sound and to this script who sits on the manager in the preload seen. active through all scenes
 public class AudioManager : MonoBehaviour
 {
     public Sound[] sounds;
+    GameVariables gameVariables;
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -20,11 +24,16 @@ public class AudioManager : MonoBehaviour
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
         }
+
+         
+        
+
+
     }
 
     private void Start()
     {
-        //Play("StartScreenMusic");
+        Play("StartScreenMusic");
     }
 
 
@@ -50,6 +59,6 @@ public class AudioManager : MonoBehaviour
         s.source.Stop();
     }
 
-
+     
 
 }

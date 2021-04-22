@@ -21,5 +21,7 @@ public class LevelGeneratorVariables : ScriptableObject
     public int levelIDHeader;
     public int randomNumberGeneratedFrom;
     public int randomNumberGeneratedTo;
+    public float platformScrollSpeed;
+    public float backgroundScrollSpeed;
     public List<LevelContent> levelContent;
 }

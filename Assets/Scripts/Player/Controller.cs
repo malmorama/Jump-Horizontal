@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+//controll the movements of the player with the input on iphone or laptop
 public class Controller : MonoBehaviour
 {
      

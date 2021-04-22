@@ -16,6 +16,8 @@ MonoBehaviour:
   levelIDHeader: 112
   randomNumberGeneratedFrom: 1
   randomNumberGeneratedTo: 40
+  platformScrollSpeed: 12
+  backgroundScrollSpeed: 0.06
   levelContent:
   - methodName: RespawnObjectWithObjectOnTop
     methodActive: 1
@@ -51,4 +53,18 @@ MonoBehaviour:
     randomNumberTo: 22
     objRespawn: Platform
     objOnTop: Heart
+    objOnTopHeight: 3
+  - methodName: RespawnAnotherObject
+    methodActive: 1
+    randomNumberFrom: 23
+    randomNumberTo: 28
+    objRespawn: SendCoinsEventPlatform
+    objOnTop: 
+    objOnTopHeight: 3
+  - methodName: RespawnAnotherObject
+    methodActive: 1
+    randomNumberFrom: 29
+    randomNumberTo: 39
+    objRespawn: SendMissileEventPlatform
+    objOnTop: 
     objOnTopHeight: 3

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//controlls the brown platform and upanddown kill prefab that moved up and down on location
 public class ScrollObjectUpDown : MonoBehaviour
 {
     public GameVariables gameVariables;
@@ -19,7 +20,7 @@ public class ScrollObjectUpDown : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.position = new Vector2(gameObject.transform.position.x - scrollSpeed * Time.deltaTime, gameObject.transform.position.y + scrollSpeedY * Time.deltaTime);
+        gameObject.transform.position = new Vector2(gameObject.transform.position.x - gameVariables.platformScrollSpeed * Time.deltaTime, gameObject.transform.position.y + scrollSpeedY * Time.deltaTime);
         
 
         if (gameObject.transform.position.y > yTop)

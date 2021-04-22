@@ -2,40 +2,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//takes data from levergeneratorvariables a scriptableobject and based on this generate the level ID
+//takes data from levergeneratorvariables a scriptableobject that is attached to this script. Is a game object
+//under the resspawn collider and based on data in the scriptable object generate the leval based on the level ID and what
+//hits the collider to the left
 public class LevelGenerator : MonoBehaviour
 {
-    /*
-        [System.Serializable]
-        public class LevelContent
-        {
-            public string methodName;
-            public bool methodActive;
-            public int randomNumberFrom;
-            public int randomNumberTo;
-            public string objRespawn;
-            public string objOnTop;
-        }
-
-        */
-
-    //public int levelIDHeader;
-    //public int randomNumberGeneratedFrom;
-    //public int randomNumberGeneratedTo;
-   // public List<LevelContent> levelContent;
     public GameVariables gameVariables;
     private int randomNumber;
     //private bool respawnOnce = false;
 
+    //private GameObject tempHeart;
+
     public LevelGeneratorVariables levelGeneratorVariables;
+    private RespawnColliderScript respawnColliderScript;
+
+
 
     private void Start()
     {
-        gameVariables.respawnOnce = false;  
+        respawnColliderScript = GameObject.Find("RespawnCollider").GetComponent<RespawnColliderScript>();
+        respawnColliderScript.levelGeneratorEvent.AddListener(LevelGeneratorMetod);
+
+        //tempHeart = GameObject.FindWithTag("Heart");
+
+        gameVariables.respawnOnce = false;
+
+        //check if what level the player is on to set the background scroll speed
+        if(gameVariables.playerOnLevel == levelGeneratorVariables.Level)
+        {
+            gameVariables.platformScrollSpeed = levelGeneratorVariables.platformScrollSpeed;
+            gameVariables.backgroundScrollSpeed = levelGeneratorVariables.backgroundScrollSpeed;
+        }
+        
     }
 
 
-    //checks the levelid and match it with the attached scriptable object. if they match start the generator 
+    //checks the levelid and match it with the attached scriptable object. if they match start the generator
+    //that loop through the levelcontent class and respawn based on content in the call
     //based on the data in the list set in the inspector in the scriptable object attached to this script, we generate level
     public void LevelGeneratorMetod(int levelID, Collider2D collision)
     {
@@ -54,9 +57,12 @@ public class LevelGenerator : MonoBehaviour
     //loop through the list in the inspector to generate the level
     private void LevelGeneratorLoop(Collider2D collision)
     {
-        gameVariables.playerOnLevel = levelGeneratorVariables.Level;
+        gameVariables.playerOnLevel = levelGeneratorVariables.Level;    //set the player level on the gamevariable same as the level level
+        
+
         randomNumber = Random.Range(levelGeneratorVariables.randomNumberGeneratedFrom, levelGeneratorVariables.randomNumberGeneratedTo);
         checkIfRespawnHeart(); // set heart active to respawn or not only if life is 1
+        IfActiveOnScreenDontRespawn();
 
         //if flag send it only once on top of a platform
         if (levelGeneratorVariables.levelContent[0].objOnTop == "Flag")
@@ -117,14 +123,53 @@ public class LevelGenerator : MonoBehaviour
             {
                 levelGeneratorVariables.levelContent[i].methodActive = false;
             }
+
+
             if (levelGeneratorVariables.levelContent[i].objOnTop == "Heart" && gameVariables.life == 1)
             {
                 levelGeneratorVariables.levelContent[i].methodActive = true;
             }
 
         }
-        
+
     }
+
+    private void IfActiveOnScreenDontRespawn()
+    {
+        int length = levelGeneratorVariables.levelContent.Count;
+        for (int i = 0; i < length; i++)
+        {
+
+            //if in the list and active on screen dont send it again
+            if (GameObject.FindWithTag("Heart") != null)
+            {
+                if (levelGeneratorVariables.levelContent[i].objOnTop == "Heart" && GameObject.FindWithTag("Heart").activeInHierarchy == true)
+                {
+                    levelGeneratorVariables.levelContent[i].methodActive = false;
+                }
+            }
+
+            // if (GameObject.FindWithTag("HeliPrefab") == null)
+            // { 
+            if (levelGeneratorVariables.levelContent[i].objOnTop == "HeliPrefab")
+            {
+                levelGeneratorVariables.levelContent[i].methodActive = true;
+            }
+            //  }
+
+            //if in the list and active on screen dont send it again
+            if (GameObject.FindWithTag("HeliPrefab") != null)
+            {
+                if (levelGeneratorVariables.levelContent[i].objOnTop == "HeliPrefab" && GameObject.FindWithTag("HeliPrefab").activeInHierarchy == true)
+                {
+                    levelGeneratorVariables.levelContent[i].methodActive = false;
+                }
+            }
+
+           
+        }
+    }
+
 
     private void RespawnObjectWithObjectOnTop(Collider2D collision, string objectBelowToRespawn, string objectAboveToRespawn, int objectAboveToRespawnHeight)
     {

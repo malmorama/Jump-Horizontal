@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
+
+//control what happens when player lands on different platforms or collectables
 [System.Serializable] public class _UnityEventGameObject : UnityEvent<GameObject> { }
 
 public class PlayerLogic : MonoBehaviour
@@ -17,13 +19,14 @@ public class PlayerLogic : MonoBehaviour
     public ParticleSystem dust;
     public GameVariables gameVariables;
     private bool collideWithPlatform = false;
-    private float oldPlatformSpeed;
-    private float oldBackgroundSpeed;
     public _UnityEventGameObject rightSideUpEvent;
     public _UnityEventGameObject rightSideDownEvent;
     public GameObject heliAnimation;
     public UnityEvent teleportEvent;
     public UnityEvent respawnWithHelicopterEvent;
+    public UnityEvent heliPrefabEvent;
+    private List<string> stdPlatformAction = new List<string>();
+    //private List<string> eventPlatforms = new List<string>();
 
     //float tempScore;
 
@@ -47,11 +50,26 @@ public class PlayerLogic : MonoBehaviour
         StartCoroutine(mainPlatformCollisionAction());
         StartCoroutine(PlayerFallOffScreen());
         StartCoroutine(UpdateScoreScroll());
-        //tempScore = 0;
-      
-        //lifeText.text = gameVariables.life.ToString();
-        oldPlatformSpeed = gameVariables.platformScrollSpeed;
-        oldBackgroundSpeed = gameVariables.backgroundScrollSpeed;
+        
+
+        //if hit these perform std action = jump, smoke, sound
+        stdPlatformAction.Add("Platform");
+        stdPlatformAction.Add("FlagPlatform");
+        stdPlatformAction.Add("BrownPlatform");
+        stdPlatformAction.Add("SendCoinsEventPlatform");
+        stdPlatformAction.Add("SendMissileEventPlatform");
+
+
+        //if hit these activity on screen happens
+        //eventPlatforms.Add("CoinScrollFromRight");
+
+        //make sure life is always 1 if less than 1 when start the game.   
+        if (gameVariables.life < 1)
+        {
+            gameVariables.life = 1;
+        }
+
+
 
 
     }
@@ -76,7 +94,7 @@ public class PlayerLogic : MonoBehaviour
             gameVariables.coin += 25;
             //scoreText.text = Mathf.Round(gameVariables.score).ToString();
             collision.gameObject.SetActive(false);
-            audioManager.Play("CoinCollectSound");
+            audioManager.Play("HeartCollectSound");
         }
 
         //if collide with heart 1 lift point, max lift point is 2 
@@ -110,17 +128,29 @@ public class PlayerLogic : MonoBehaviour
             StartCoroutine(FadeBlackLoadAScene("BetweenScenesStats"));
         }
 
+        if (collision.gameObject.name.StartsWith("HeliPrefab"))
+        {
+            heliPrefabEvent.Invoke();
+            collision.gameObject.SetActive(false);
+        }
+
+        if (collision.gameObject.name.StartsWith("Missile"))
+        {
+            gameObject.transform.position = new Vector2(0, -51);
+        }
+
     }
 
-    
 
+    
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
 
         //if hits a red platform player death, game restarts
-        if (collision.collider.gameObject.name.StartsWith("Spring") && rb2d.velocity.y <= 0)
+        if (collision.collider.gameObject.name.StartsWith("Spring") || collision.collider.gameObject.name.StartsWith("UpDownKill")
+            && rb2d.velocity.y <= 0)
         {
             //menu.SetActive(true);
             //gameObject.SetActive(false);
@@ -129,57 +159,51 @@ public class PlayerLogic : MonoBehaviour
 
         }
 
-        //If player hit main platform jump 
-        if (collision.collider.gameObject.name.StartsWith("Platform")  && rb2d.velocity.y <= 0)
-        {
-            //at first collision set bool to true to can not jump twice. Then in a coroutne change it back with delay
-            if (collideWithPlatform == false)
-            {
-                collideWithPlatform = true;
-                rb2d.AddForce(Vector2.up * gameVariables.jumpForce);
-                //TrailDust
-                TrailDust(collision);
-     
-                audioManager.Play("PlayerJump");
 
+        //perform the same actions if land on the platforms in the list
+        for (int i = 0; i < stdPlatformAction.Count; i++)
+        {
+            string tempName = stdPlatformAction[i];
+
+            //If player hit main platform jump 
+            if (collision.collider.gameObject.name.StartsWith(tempName) && rb2d.velocity.y <= 0)
+            {
+                //at first collision set bool to true to can not jump twice. Then in a coroutne change it back with delay
+                if (collideWithPlatform == false)
+                {
+                    collideWithPlatform = true;
+                    rb2d.AddForce(Vector2.up * gameVariables.jumpForce);
+                    //TrailDust
+                    TrailDust(collision);
+
+                    audioManager.Play("PlayerJump");
+
+                }
             }
         }
 
-        //If player hit main platform jump 
-        if (collision.collider.gameObject.name.StartsWith("FlagPlatform") && rb2d.velocity.y <= 0)
-        {
-            //at first collision set bool to true to can not jump twice. Then in a coroutne change it back with delay
-            if (collideWithPlatform == false)
-            {
-                collideWithPlatform = true;
-                rb2d.AddForce(Vector2.up * gameVariables.jumpForce);
-                //dust.Play();
-                audioManager.Play("PlayerJump");
-            }
-        }
-
-
-        if (collision.collider.gameObject.name.StartsWith("BrownPlatform") && rb2d.velocity.y <= 0)
-        {
-            //at first collision set bool to true to can not jump twice. Then in a coroutne change it back with delay
-            if (collideWithPlatform == false)
-            {
-                collideWithPlatform = true;
-                rb2d.AddForce(Vector2.up * gameVariables.jumpForce);
-                //dust.Play();
-                audioManager.Play("PlayerJump");
-            }
-        }
-
-
+        //this runs a coroutine on the gameobject CoroutineOnScreens. Like this since the GameObj always is active, otherwise
+        //coroutine stops
         if (collision.collider.gameObject.name.StartsWith("TeleportPlatform") && rb2d.velocity.y <= 0)
         {
-            
+            //at first collision set bool to true to can not jump twice. Then in a coroutne change it back with delay
+            if (collideWithPlatform == false)
+            {
+                collideWithPlatform = true;
+                rb2d.AddForce(Vector2.up * gameVariables.jumpForce);
+                //dust.Play();
+                audioManager.Play("PlayerJump");
+            }
             teleportEvent.Invoke();
             //StartCoroutine(TelePortPlatformCoroutine());
         }
 
-
+        //if the collision collider has an interface IEventPlatforms on it, run the EventPlatformActon method
+        IEventPlatforms eventPlatforms = collision.collider.gameObject.GetComponent<IEventPlatforms>();
+        if (eventPlatforms != null)
+        {
+            eventPlatforms.EventPlatformAction();
+        }
     }
 
     //find the contact point on the impact oncollision and spawn the dust here
@@ -202,7 +226,7 @@ public class PlayerLogic : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSecondsRealtime(0.2f);
             collideWithPlatform = false;
         }
     }
@@ -241,7 +265,8 @@ public class PlayerLogic : MonoBehaviour
             {
                 
                 respawnWithHelicopterEvent.Invoke();
-              
+                
+
             }
                 
             if (gameVariables.life == 1 && gameObject.transform.position.y < -50)
@@ -267,73 +292,4 @@ public class PlayerLogic : MonoBehaviour
     }
 
 
-    private IEnumerator TelePortPlatformCoroutine()
-    {
-        audioManager.Play("TeleportSound");
-        gameVariables.sendTelePortOnlyOnce = true;
-        float telePortScore = 5f;
-        float telePortPlatformSpeed = 50;
-        //float telePortIncreaseBackgroundSpeed = 0.0001f;
-        float telePortIncreasePlatformSpeed = 0.75f;
-
-        //hide the player and set gravity to zero
-
-        //jumpForce = 0;
-        rb2d.gravityScale = 0;
-        gameObject.transform.position = new Vector2(gameObject.transform.position.x, -45);
-        
-        
-        //increase speed then wait 2,5
-        while (gameVariables.platformScrollSpeed <= telePortPlatformSpeed)
-        {
-            //gameVariables.backgroundScrollSpeed += telePortIncreaseBackgroundSpeed;
-            gameVariables.platformScrollSpeed += telePortIncreasePlatformSpeed;
-            gameVariables.score += telePortScore;
-            //scoreText.text = Mathf.Round(gameVariables.score).ToString();
-            yield return new WaitForSeconds(0.010f);
-        }
-
-         
-        //gameVariables.score += telePortScore;
-        //yield return new WaitForSeconds(1f);
-
-        
-        //reduce speed
-        while (gameVariables.platformScrollSpeed >= oldPlatformSpeed)
-        {
-            gameVariables.platformScrollSpeed -= telePortIncreasePlatformSpeed;
-            //gameVariables.backgroundScrollSpeed -= telePortIncreaseBackgroundSpeed;
-            gameVariables.score += telePortScore;
-            //scoreText.text = Mathf.Round(gameVariables.score).ToString();
-            yield return new WaitForSeconds(0.010f);
-        }
-        
-        //set back speed
-        gameVariables.platformScrollSpeed = oldPlatformSpeed;
-        gameVariables.backgroundScrollSpeed = oldBackgroundSpeed;
-
-        //yield return new WaitForSeconds(1.5f);
-
-        //send in platform with teleport on top, the wait few seconds, then deactivate Teleport, send in player
-
-        Vector2 position = new Vector2(30, 2); //platform position
-        Vector2 position2 = new Vector2(30, 5); // portal position
-        GameObject tempPlat = ObjectPooler.Instance.SpawnFromPool("Platform", position, Quaternion.identity);
-        GameObject tempPlat2 = ObjectPooler.Instance.SpawnFromPool("Teleportstation", position2, Quaternion.identity);
-        audioManager.Play("TeleportSound");
-
-        yield return new WaitForSeconds(1.5f);
-        tempPlat2.SetActive(false);
-        gameObject.transform.position = tempPlat.transform.position;
-        //yield return new WaitForSeconds(0.5f);
-        rb2d.gravityScale = 5;
-        //gameVariables.jumpForce = 800;
-        rb2d.AddForce(Vector2.up * gameVariables.jumpForce);
-
-        gameVariables.sendTelePortOnlyOnce = false;
-
-        yield return null;
-
-
-    }
 }

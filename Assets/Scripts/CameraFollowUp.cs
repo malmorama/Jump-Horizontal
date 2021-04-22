@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//follow the player as he jumps up and does not go to far down. 
 public class CameraFollowUp : MonoBehaviour
 {
     public Transform followTransform;

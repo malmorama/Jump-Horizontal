@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//controlls the player animation based if lands on a platform or at the top of the air on his way down
 public class PlayerAnimation : MonoBehaviour
 {
     public LayerMask platformLayerMask;

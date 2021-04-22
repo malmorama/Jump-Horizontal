@@ -16,6 +16,8 @@ MonoBehaviour:
   levelIDHeader: 113
   randomNumberGeneratedFrom: 1
   randomNumberGeneratedTo: 1
+  platformScrollSpeed: 12
+  backgroundScrollSpeed: 0.06
   levelContent:
   - methodName: RespawnObjectWithObjectOnTop
     methodActive: 1

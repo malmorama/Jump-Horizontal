@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//scroll all platforms and collectables to the left
 public class ScrollObject : MonoBehaviour
 {
     public GameVariables gameVariables;
